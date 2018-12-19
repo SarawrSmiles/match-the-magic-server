@@ -19,12 +19,8 @@ app.config['MYSQL_DB'] = 'DisneyboundRef'
 mysql = MySQL(app)
 
 @app.route('/')
-def users():
-    cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM Era''')
-    rv = cur.fetchall()
-    cur.close()
-    return str(rv)
+def hi():
+    return str("hi")
 
 @app.route('/colors')
 def fetch_colors():
