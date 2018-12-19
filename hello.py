@@ -29,9 +29,10 @@ def users():
 @app.route('/colors')
 def fetch_colors():
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT Colors.name, Colors.hex, Characters.name, CharacterColors.hex, Colors.complement 
-                   FROM CharacterColors, Colors, Characters 
+    cur.execute('''SELECT Colors.name, Colors.hex, Characters.name, CharacterColors.hex, Colors.complement, Garments.type, Garments.svg
+                   FROM CharacterColors, Colors, Characters, Garments 
                    WHERE CharacterColors.color_id = Colors.id 
+                   AND Garments.id = CharacterColors.garment_id
                    AND CharacterColors.character_id = Characters.id 
                    ORDER BY Colors.id''')
     results = cur.fetchall()
@@ -43,12 +44,14 @@ def fetch_colors():
         character_name = result[2]
         character_hex = result[3]
         color_complement = result[4]
+        garment_type = result[5]
+        garment_svg = result[6]
 
         seen = False
 
         for color in colors:
             if color["name"] == color_name:
-                color["characters"].append({"name": str(character_name), "hex":str(character_hex)})
+                color["characters"].append({"name": str(character_name), "hex":str(character_hex), "garment":str(garment_type), "svg":str(garment_svg)})
                 seen = True
                 break
         if not seen:
@@ -56,13 +59,42 @@ def fetch_colors():
                     "name" : str(color_name),  
                     "hex" : str(color_hex),
                     "complement": str(color_complement),
-                    "characters" : [{"name":str(character_name), "hex":str(character_hex)}]
+                    "characters" : [{"name":str(character_name), "hex":str(character_hex), "garment":str(garment_type)}]
                 })
 
     cur.close()
     return json.dumps(colors)
 
     
+@app.route('/colorshelper')
+def colors_helper():
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT CharacterColors.id, Characters.name, Colors.name, CharacterColors.hex, CharacterColors.article, CharacterColors.importance, CharacterColors.outfit_name
+                   FROM CharacterColors, Characters, Colors
+                   WHERE CharacterColors.color_id = Colors.id
+                   AND CharacterColors.character_id = Characters.id
+                   AND CharacterColors.article IS NULL''')
+    results = cur.fetchall()
+    
+    color_map = []
+    html_object = "<ul>"
+    for result in results:
+        color_id = str(result[0])
+        character_name = str(result[1])
+        color_name = str(result[2])
+        color_hex= str(result[3])
+        article = str(result[4])
+        importance = str(result[5])
+        outfit_name = str(result[6])
+
+        html_object = html_object + "<li style='padding: 10px;'>" + color_id + ": " + character_name + " ("+ outfit_name + ") <span class='color' style='background-color: " + color_hex + "; margin: 0 5px; padding: 3px;'>" + color_name + "</span> <span style='min-width: 20px; border-bottom: 1px solid black; margin: 0 5px;'> " + article + "</span> <span class='importance'> " + importance + "</span></li>"
+
+    html_object = html_object + "</ul>"
+
+
+    return html_object
+
+
 @app.route('/movies')
 def fetch_movies():
     cur = mysql.connection.cursor()
