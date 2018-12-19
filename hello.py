@@ -35,27 +35,27 @@ def fetch_colors():
     
     colors = []
     for result in results:
-        color_name = result[0]
-        color_hex = result[1]
-        character_name = result[2]
-        character_hex = result[3]
-        color_complement = result[4]
-        garment_type = result[5]
-        garment_svg = result[6]
+        color_name       = str(result[0])
+        color_hex        = str(result[1])
+        character_name   = str(result[2])
+        character_hex    = str(result[3])
+        color_complement = str(result[4])
+        garment_type     = str(result[5])
+        garment_svg      = str(result[6])
 
         seen = False
 
         for color in colors:
             if color["name"] == color_name:
-                color["characters"].append({"name": str(character_name), "hex":str(character_hex), "garment":str(garment_type), "svg":str(garment_svg)})
+                color["characters"].append({"name": character_name, "hex": character_hex, "garment": garment_type, "svg": garment_svg})
                 seen = True
                 break
         if not seen:
             colors.append({
-                    "name" : str(color_name),  
-                    "hex" : str(color_hex),
-                    "complement": str(color_complement),
-                    "characters" : [{"name":str(character_name), "hex":str(character_hex), "garment":str(garment_type)}]
+                    "name" : color_name,  
+                    "hex" : color_hex,
+                    "complement": color_complement,
+                    "characters" : [{"name": character_name, "hex": character_hex, "garment": garment_type}]
                 })
 
     cur.close()
