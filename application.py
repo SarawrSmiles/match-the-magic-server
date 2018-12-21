@@ -5,15 +5,16 @@ from flask_mysqldb import MySQL
 from flask import jsonify
 import datetime
 import json
+import confidential
 
 app = Flask(__name__)
 CORS(app)
 
 # Configuration
-app.config["MYSQL_HOST"] = "rds-mysql-sarah.ched3otliuj2.us-west-1.rds.amazonaws.com"
-app.config["MYSQL_USER"] = "SarahStrawn"
-app.config["MYSQL_PASSWORD"] = "big5carr0t"
-app.config["MYSQL_DB"] = "DisneyboundRef"
+app.config["MYSQL_HOST"] = confidential.host 
+app.config["MYSQL_USER"] = confidential.user
+app.config["MYSQL_PASSWORD"] = confidential.password
+app.config["MYSQL_DB"] = confidential.db
 
 
 mysql = MySQL(app)
