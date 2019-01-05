@@ -3,19 +3,19 @@ from flask import request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 from flask import jsonify
+from flask import render_template
+from flask import request
 import datetime
 import json
-import confidential
 
 app = Flask(__name__)
 CORS(app)
 
 # Configuration
-app.config["MYSQL_HOST"] = confidential.host 
-app.config["MYSQL_USER"] = confidential.user
-app.config["MYSQL_PASSWORD"] = confidential.password
-app.config["MYSQL_DB"] = confidential.db
-
+app.config["MYSQL_HOST"] = '' 
+app.config["MYSQL_USER"] = ''
+app.config["MYSQL_PASSWORD"] = ''
+app.config["MYSQL_DB"] = ''
 
 mysql = MySQL(app)
 
@@ -23,6 +23,17 @@ mysql = MySQL(app)
 @app.route("/")
 def hi():
     return str("hi")
+
+@app.route("/beginApp", methods=['POST', 'GET'])
+def begin():
+    error = None
+    if request.method == 'POST':
+        app.config["MYSQL_HOST"] = request.form['host'] 
+        app.config["MYSQL_USER"] = request.form['user'] 
+        app.config["MYSQL_PASSWORD"] = request.form['password']
+        app.config["MYSQL_DB"] = request.form['db']
+        return render_template('loggedin.html')
+    return render_template('begin.html', error=error)
 
 
 @app.route("/colors")
