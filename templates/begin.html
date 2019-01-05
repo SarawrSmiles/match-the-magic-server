@@ -1,0 +1,14 @@
+<form action = "http://localhost:5000/beginApp" method = "POST">
+<label>Host: <input name="host" type="text"></label>
+<label>Username: <input name="user" type="text"></label>
+<label>Password: <input name="password" type="password"></label>
+<label>Database name: <input name="db" type="password"></label>
+<p><input type = "submit" value = "submit" /></p>
+</form>
+
+
+
+        app.config["MYSQL_HOST"] = request.form['host'] 
+        app.config["MYSQL_USER"] = request.form['user'] 
+        app.config["MYSQL_PASSWORD"] = request.form['password']
+        app.config["MYSQL_DB"] = request.form['db']

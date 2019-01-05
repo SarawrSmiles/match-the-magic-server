@@ -1,1 +1,3 @@
-venv/
+confidential.py
+*.pyc
+.DS_Store
